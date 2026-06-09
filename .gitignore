@@ -1,0 +1,34 @@
+# Node dependencies module storage folders
+node_modules/
+.pnp
+.pnp.js
+
+# Local environment production asset bundles
+dist/
+
+# Python virtual environment folder tracks
+venv/
+env/
+ENV/
+.env
+
+# Computational cache frameworks and logging profiles
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+doc_env/
+
+# Operating system profile system tracks
+.DS_Store
+Thumbs.db
+.vscode/
+node_modules/
+dist/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+frontend/.env
+backend/.env
