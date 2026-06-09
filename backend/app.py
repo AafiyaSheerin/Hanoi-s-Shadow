@@ -1,6 +1,7 @@
 import base64
 import cv2
 import numpy as np
+import traceback
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -37,7 +38,6 @@ def handle_frame(data: FrameData):
         active_zone = -1
         if result["detected"] and result["fingertip_x"] is not None:
             x = result["fingertip_x"]
-            # Divide frame width (640) into 3 equal zones: A=0, B=1, C=2
             if x < 213:
                 active_zone = 0
             elif x < 426:
@@ -54,6 +54,7 @@ def handle_frame(data: FrameData):
             "game_state": game_engine.get_state()
         }
     except Exception as e:
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/action")
