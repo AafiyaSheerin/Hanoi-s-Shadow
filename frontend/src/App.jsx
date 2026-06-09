@@ -16,7 +16,7 @@ export default function App() {
     const gameStateRef = useRef(gameState);
     const mainDivRef = useRef(null);
 
-    const BACKEND_URL = 'http://localhost:8001';
+    const BACKEND_URL = 'https://hanoi-s-shadow-backend.onrender.com';
 
     useEffect(() => { activeZoneRef.current = activeZone; }, [activeZone]);
     useEffect(() => { gameStateRef.current = gameState; }, [gameState]);
