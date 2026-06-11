@@ -90,8 +90,12 @@ export default function App() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ image: frameData })
         })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error(`Backend error: ${res.status}`);
+                return res.json();
+            })
             .then(data => {
+                if (!data || !data.game_state) return;
                 setPointer(data.pointer);
                 setActiveZone(data.active_zone);
                 activeZoneRef.current = data.active_zone;
@@ -118,8 +122,12 @@ export default function App() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ command: 'interact', zone: zone })
         })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error(`Backend error: ${res.status}`);
+                return res.json();
+            })
             .then(data => {
+                if (!data || !data.state) return;
                 setGameState(data.state);
                 gameStateRef.current = data.state;
                 setStatusMessage(data.message);
@@ -127,7 +135,8 @@ export default function App() {
                 if (!data.success) playSound('error');
                 else if (isGrabbing) playSound('grab');
                 else playSound('drop');
-            });
+            })
+            .catch(() => { setStatusMessage('Connection to server failed.'); setIsError(true); });
     };
 
     useEffect(() => {
@@ -148,13 +157,18 @@ export default function App() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ command: 'reset', disks: forcedDisks })
         })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error(`Backend error: ${res.status}`);
+                return res.json();
+            })
             .then(data => {
+                if (!data || !data.state) return;
                 setGameState(data.state);
                 setStatusMessage(`Game reset with ${forcedDisks} disks.`);
                 setIsError(false);
                 playSound('drop');
-            });
+            })
+            .catch(() => { setStatusMessage('Connection to server failed.'); setIsError(true); });
     };
 
     const handleUndo = () => {
@@ -163,14 +177,19 @@ export default function App() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ command: 'undo' })
         })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error(`Backend error: ${res.status}`);
+                return res.json();
+            })
             .then(data => {
+                if (!data || !data.state) return;
                 setGameState(data.state);
                 setStatusMessage(data.message);
                 setIsError(!data.success);
                 if (data.success) playSound('undo');
                 else playSound('error');
-            });
+            })
+            .catch(() => { setStatusMessage('Connection to server failed.'); setIsError(true); });
     };
 
     const handleLevelToggle = (e) => {

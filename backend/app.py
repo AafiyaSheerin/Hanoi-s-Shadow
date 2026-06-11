@@ -12,6 +12,10 @@ from vision.tracker import process_frame
 
 app = FastAPI(title="Tower of Hanoi Vision API")
 
+@app.get("/")
+def health_check():
+    return {"status": "ok", "service": "Tower of Hanoi Vision API"}
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -55,7 +59,16 @@ def handle_frame(data: FrameData):
         }
     except Exception as e:
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+        # Return a graceful fallback instead of crashing — keeps the frontend alive
+        return {
+            "pointer": None,
+            "active_zone": -1,
+            "annotated_frame": None,
+            "fingers_up": 0,
+            "gesture": "unknown",
+            "game_state": game_engine.get_state(),
+            "error": str(e)
+        }
 
 @app.post("/api/action")
 def execute_game_action(action: dict):
