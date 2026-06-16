@@ -15,6 +15,7 @@ export default function App() {
     const activeZoneRef = useRef(-1);
     const gameStateRef = useRef(gameState);
     const mainDivRef = useRef(null);
+    const isProcessingRef = useRef(false);
 
     const BACKEND_URL = 'https://hanoi-s-shadow-backend.onrender.com';
 
@@ -78,9 +79,10 @@ export default function App() {
     }, []);
 
     const captureAndProcessFrame = () => {
-        if (!videoRef.current || !canvasRef.current) return;
+        if (!videoRef.current || !canvasRef.current || isProcessingRef.current) return;
         const video = videoRef.current;
         if (video.readyState < 2) return;
+        isProcessingRef.current = true;
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -105,7 +107,10 @@ export default function App() {
                     setAnnotatedFrame(data.annotated_frame);
                 }
             })
-            .catch(() => console.log("Waiting for backend..."));
+            .catch(() => console.log("Waiting for backend..."))
+            .finally(() => {
+                isProcessingRef.current = false;
+            });
     };
 
     const triggerInteraction = () => {
@@ -224,7 +229,7 @@ export default function App() {
             style={{ maxWidth: '1000px', margin: '0 auto', padding: '10px', fontFamily: 'sans-serif', outline: 'none' }}
         >
             {/* Hidden video + canvas for capture */}
-            <video ref={videoRef} autoPlay playsInline style={{ display: 'none' }} />
+            <video ref={videoRef} autoPlay playsInline muted style={{ display: 'none' }} />
             <canvas ref={canvasRef} width="640" height="480" style={{ display: 'none' }} />
 
             {/* Control Strip */}

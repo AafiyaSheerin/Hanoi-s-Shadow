@@ -21,7 +21,7 @@ export default function Scoreboard({ gameState, statusMessage, isError, onReset,
                 </h2>
                 <div style={{ display: 'flex', gap: '24px', fontSize: '15px', color: '#2b2d42' }}>
                     <span>🔢 <strong>Moves Made:</strong> {move_count}</span>
-                    <span>open_hands <strong>Holding Disk:</strong> {selected_disk ? `Size ${selected_disk}` : 'None'}</span>
+                    <span>👐 <strong>Holding Disk:</strong> {selected_disk ? `Size ${selected_disk}` : 'None'}</span>
                 </div>
 
                 {statusMessage && (
