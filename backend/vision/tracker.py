@@ -6,7 +6,7 @@ import mediapipe as mp
 # ── MediaPipe Hands (old API — no model download needed) ──────────────────────
 _mp_hands = mp.solutions.hands
 _hands = _mp_hands.Hands(
-    static_image_mode=False,
+    static_image_mode=True,
     max_num_hands=1,
     min_detection_confidence=0.6,
     min_tracking_confidence=0.5,
